@@ -320,3 +320,5 @@ writingDirection=Writing Direction
 zoom=Zoom
 zoomIn=Zoom In
 zoomOut=Zoom Out
+
+Wangjun=Wang Jun Test
