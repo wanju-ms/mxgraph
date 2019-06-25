@@ -89,8 +89,7 @@
 				mxResources.getSpecialBundle(RESOURCE_BASE, mxLanguage);
 
 			// Fixes possible asynchronous requests
-			mxUtils.getAll([bundle, STYLE_PATH + '/default.xml'], function(xhr)
-			{
+			mxUtils.getAll([bundle, STYLE_PATH + '/default.xml'], function(xhr) {
 				// Adds bundle text to resources
 				mxResources.parse(xhr[0].getText());
 				
@@ -99,9 +98,54 @@
 				themes[Graph.prototype.defaultThemeName] = xhr[1].getDocumentElement(); 
 				
 				// Main
-				new EditorUi(new Editor(urlParams['chrome'] == '0', themes));
-			}, function()
-			{
+				var editor = new Editor(urlParams['chrome'] == '0', themes)
+				new EditorUi(editor);
+
+				/////////
+				var graph = editor.graph
+				graph.getView().updateStyle = true;
+
+				// Needs to set a flag to check for dynamic style changes,
+				// that is, changes to styles on cells where the style was
+				// not explicitely changed using mxStyleChange
+				graph.getView().updateStyle = true;
+				
+				// Overrides mxGraphModel.getStyle to return a specific style
+				// for edges that reflects their target terminal (in this case
+				// the strokeColor will be equal to the target's fillColor).
+				var previous = graph.model.getStyle;
+				
+				graph.model.getStyle = function(cell) {
+					if (cell != null) {
+						var style = previous.apply(this, arguments);
+						
+						if (this.isEdge(cell)) {
+							var target = this.getTerminal(cell, false);
+
+							if (target != null) {
+								var state = graph.getView().getState(target);
+								var targetStyle = (state != null) ? state.style : graph.getCellStyle(target);
+								var fill = mxUtils.getValue(targetStyle, mxConstants.STYLE_FILLCOLOR);
+								
+								if (fill != null) {
+									style += ';strokeColor='+fill;
+								}
+							}
+						} else if (this.isVertex(cell)) {
+							var geometry = this.getGeometry(cell);
+							
+							if (geometry != null && geometry.width > 80) {
+								style += ';fillColor=green';
+							}
+						}
+						
+						return style;
+					}
+					
+					return null;
+				};
+			}, 
+			function() {
 				document.body.innerHTML = '<center style="margin-top:10%;">Error loading resource files. Please check browser console.</center>';
 			});
 		})();

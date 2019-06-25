@@ -80,7 +80,11 @@ Sidebar.prototype.init = function()
 	var dir = STENCIL_PATH;
 	
 	this.addSearchPalette(true);
-	this.addGeneralPalette(true);
+
+	// wj: add a new palette
+	this.addMyPalette(true);
+
+	this.addGeneralPalette(false);
 	this.addMiscPalette(false);
 	this.addAdvancedPalette(false);
 	this.addBasicPalette(dir);
@@ -1070,6 +1074,59 @@ Sidebar.prototype.addMiscPalette = function(expand)
 
 	this.addPaletteFunctions('misc', mxResources.get('misc'), (expand != null) ? expand : true, fns);
 };
+
+
+/**
+ * Adds new palette
+ */
+Sidebar.prototype.addMyPalette = function(expand) {
+	this.addPaletteFunctions('wangjun_test_palette', mxResources.get('Wangjun'), (expand != null) ? expand : false, this.createMyShapes());
+}
+
+Sidebar.prototype.createMyShapes = function() {
+
+	// Avoids having to bind all functions to "this"
+	var sb = this;  //sidebar
+
+	return [
+		this.addEntry('Sample component', function() {
+			const titleHeight = 20
+			const contentHeight = 50
+
+			var titleCell = new mxCell('Title', new mxGeometry(0, 0, 80, titleHeight), 'text;html=1;fillColor=#006666;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacingTop=0;spacingLeft=2;fontStyle=1;strokeColor=#006666;fontColor=#FCFCFC;');
+			titleCell.vertex = true
+			
+			var contentCell = new mxCell('', new mxGeometry(0, 20, 140, contentHeight), 'rounded=0;whiteSpace=wrap;html=1;fillColor=#FAFFFA;strokeColor=#67AB9F;fontSize=24;');
+			contentCell.vertex = true;
+
+			var groupedCell = sb.graph.groupCells(null, 0, [titleCell, contentCell])
+			groupedCell.collapsedImage
+			return sb.createVertexTemplateFromCells([groupedCell], 140, titleHeight + contentHeight, 'Component');
+		}),
+
+		this.addEntry('Component prop', function () {
+			var propCell = new mxCell({title: 'this.props', type: 'PROP', getAttribute: (name)=>{
+				console.log("====>", name)
+				name === 'label' || name === 'placeholders' ? 'this.props': null;
+			}}, new mxGeometry(0, 0, 80, 25), 'rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;strokeColor=#0000CC;fillColor=#CCFFFF;fontSize=12;fontColor=#0000CC;align=center;fontStyle=1;strokeWidth=2;');
+			propCell.vertex = true;
+			return sb.createVertexTemplateFromCells([propCell], 80, 25, 'Prop');
+		}),
+
+		this.addEntry('Component event', function () {
+			var eventCell = new mxCell('this.props', new mxGeometry(0, 0, 80, 25), 'rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;strokeColor=#998800;fillColor=#FFFFCC;fontSize=12;fontColor=#998800;align=center;gradientColor=none;fontStyle=1;verticalAlign=middle;strokeWidth=2;');
+			eventCell.vertex = true;
+			return sb.createVertexTemplateFromCells([eventCell], 80, 25, 'Event');
+		}),
+
+		this.addEntry('Component state', function() {
+			var stateCell = new mxCell('this.state', new mxGeometry(0, 0, 80, 25), 'rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;strokeColor=#006600;fillColor=#CCFFCC;fontSize=12;fontColor=#006600;align=center;fontStyle=1;strokeWidth=2;');
+			stateCell.vertex = true;
+			return sb.createVertexTemplateFromCells([stateCell], 80, 25, 'State');
+		}),
+	]
+}
+
 /**
  * Adds the container palette to the sidebar.
  */

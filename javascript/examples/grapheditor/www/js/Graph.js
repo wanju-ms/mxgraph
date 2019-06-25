@@ -2452,7 +2452,8 @@ Graph.prototype.connectVertex = function(source, direction, length, evt, forceCl
 		}
 		
 		var edge = ((mxEvent.isControlDown(evt) && duplicate) || (target == null && layout != null && layout.constructor == mxStackLayout)) ? null :
-			this.insertEdge(this.model.getParent(source), null, '', source, realTarget, this.createCurrentEdgeStyle());
+			//this.insertEdge(this.model.getParent(source), null, '', source, realTarget, this.createCurrentEdgeStyle());
+			this.insertEdge(this.model.getParent(source), null, '', source, realTarget, this.createEdgeStyle(source, target));
 
 		// Inserts edge before source
 		if (edge != null && this.connectionHandler.insertBeforeSource)
@@ -4858,6 +4859,15 @@ if (typeof mxVertexHandler != 'undefined')
 		 */
 		Graph.prototype.defaultEdgeStyle = {'edgeStyle': 'orthogonalEdgeStyle', 'rounded': '0',
 			'jettySize': 'auto', 'orthogonalLoop': '1'};
+
+		Graph.prototype.createEdgeStyle = function(source, target) {
+			if (source && source.value && source.value.type) {
+				if (source.value.type === "PROP") {
+					return "edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=open;endFill=0;strokeColor=#0000CC;fontSize=12;fontColor=#0000CC;curved=1;labelBackgroundColor=#FAFAFA;entryPerimeter=0;";
+				}
+			}
+			return this.createCurrentEdgeStyle()
+		}
 
 		/**
 		 * Returns the current edge style as a string.
