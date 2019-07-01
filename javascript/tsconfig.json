@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "allowJs": true,
+        "checkJs": true,
+        "allowSyntheticDefaultImports": true,
+        "target": "ES6"
+    },
+    "exclude": [
+        "node_modules"
+    ],
+    // "include": [
+    //     "mxClient.js", "src/**/*", "examples/**/*"
+    // ]
+}
