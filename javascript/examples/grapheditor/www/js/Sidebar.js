@@ -1075,7 +1075,6 @@ Sidebar.prototype.addMiscPalette = function(expand)
 	this.addPaletteFunctions('misc', mxResources.get('misc'), (expand != null) ? expand : true, fns);
 };
 
-
 /**
  * Adds new palette
  */
@@ -1107,7 +1106,8 @@ Sidebar.prototype.createMyShapes = function() {
 		this.addEntry('Component prop', function () {
 			var propCell = new mxCell({title: 'this.props', type: 'PROP', getAttribute: (name)=>{
 				console.log("====>", name)
-				name === 'label' || name === 'placeholders' ? 'this.props': null;
+				// name === 'label' || name === 'placeholders' ? 'this.props': null;
+				return {label: 'this.props' /* placeholders: 'label', placeholders: '1' */}[name]
 			}}, new mxGeometry(0, 0, 80, 25), 'rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;strokeColor=#0000CC;fillColor=#CCFFFF;fontSize=12;fontColor=#0000CC;align=center;fontStyle=1;strokeWidth=2;');
 			propCell.vertex = true;
 			return sb.createVertexTemplateFromCells([propCell], 80, 25, 'Prop');

@@ -1740,13 +1740,13 @@ mxConnectionHandler.prototype.mouseUp = function(sender, me)
 			target = this.currentState.cell;
 		}
 		
-		// Inserts the edge if no validation error exists and if constraints differ
-		if (this.error == null && (source == null || target == null ||
-			source != target || this.checkConstraints(c1, c2)))
-		{
-			this.connect(source, target, me.getEvent(), me.getCell());
-		}
-		else
+		// // Inserts the edge if no validation error exists and if constraints differ
+		// if (this.error == null && (source == null || target == null ||
+		// 	source != target || this.checkConstraints(c1, c2)))
+		// {
+		// 	this.connect(source, target, me.getEvent(), me.getCell());
+		// }
+		// else
 		{
 			// Selects the source terminal for self-references
 			if (this.previous != null && this.marker.validState != null &&
